@@ -3,6 +3,9 @@
 ## Overview
 This project involves a detailed analysis of sales data from two years, 2019 and 2020, aimed at extracting actionable insights to inform business strategies. The datasets provide critical information on orders, including order number, client ID, product code, date of delivery, and delivery amount.
 
+## Technical Environment
+SQL Dialect:MYSQL 
+
 ## Analysis Tasks
 
 1. **Data Cleansing**
