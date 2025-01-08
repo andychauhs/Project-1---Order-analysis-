@@ -34,7 +34,7 @@ This project involves a detailed analysis of sales data from two years, 2019 and
    - **Details**: Explore the impact of new products, marketing efforts, and market conditions.
 
 ## Data Sources
-The dataset for this analysis is sourced from Kaggle: Business Analysis (junior). Each dataset contains the following columns:
+The dataset for this analysis is sourced from Kaggle: Business Analysis (junior) https://www.kaggle.com/datasets/sticktogethertm/business-analysis-junior . Each dataset contains the following columns:
 - Order Number
 - Client ID
 - Product Code
@@ -44,11 +44,11 @@ The dataset for this analysis is sourced from Kaggle: Business Analysis (junior)
 ## Project Files
 - **2019 Data.csv**: Cleansed data for the year 2019.
 - **2020 Data.csv**: Cleansed data for the year 2020.
-!add project files: tables also
+
 
 ### SQL Scripts:
 - README.md: This document.
-- add SQL script 
+- project_order_analysis.sql: SQL script
 
 ## Getting Started
 1. Clone this repository to your local machine.
