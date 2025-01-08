@@ -62,9 +62,9 @@ This project aims to provide in-depth insights into sales performance over the y
 
 For any questions or further information, feel free to reach out.
 
-**Author**: [Your Name]  
-**Email**: [Your Email]  
-**Date**: [Current Date]
+**Author**: HO SIng Andy CHAU
+**Email**: hosingchau@outlook.com
+**Date**: 1 AUG 2025
 
 ## Logical Sequence Explanation
 1. Data Cleansing sets the foundation for accurate analysis.
