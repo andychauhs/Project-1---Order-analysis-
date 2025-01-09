@@ -16,7 +16,10 @@ ALTER TABLE sales_2019
 CHANGE `Order number` order_number DOUBLE,
 CHANGE `CLient ID` client_id DOUBLE,
 CHANGE `Product code` product_code DOUBLE,
-CHANGE `Date of delivery` date_of_delivery DATE
+CHANGE `Date of delivery` date_of_delivery DATE;
+
+
+ALTER TABLE sales_2019
 CHANGE ` Delivery amount` delivery_amount BIGINT;
 
 SELECT * FROM sales_2019;
@@ -60,20 +63,23 @@ CREATE TABLE sales_2019_non_nulls AS
 		AND date_of_delivery IS NOT NULL;
     
 #1) How much did the seller earn on new products in 2020?
-#earn per new product code 
+ 
+WITH temp AS(
+-- earn per new product code
 SELECT DISTINCT s20.product_code AS unique_product_code, sum(s20.delivery_amount) AS total_sales 
 FROM sales_2020_non_nulls s20
 LEFT JOIN sales_2019_non_nulls s19 ON s20.product_code = s19.product_code
 WHERE s19.product_code IS NULL
 GROUP BY unique_product_code
+)
+#percentage of revenue form new product in 2020 
+SELECT
+	sum(total_sales) AS new_product_revenue, 
+    (SELECT SUM(delivery_amount) FROM sales_2020_non_nulls) AS total_revenue,
+	sum(total_sales)/ (SELECT SUM(delivery_amount) FROM sales_2020_non_nulls) AS total_sales 
+FROM temp
 
-#total amount for new products
-SELECT sum(s20.delivery_amount) AS total_sales 
-FROM sales_2020_non_nulls s20
-LEFT JOIN sales_2019_non_nulls s19 ON s20.product_code = s19.product_code
-WHERE s19.product_code IS NULL
-GROUP BY unique_product_code
- 
+
  
  #2) Find the product with the biggest increase in 2020 compared to 2019.
 SELECT s19.product_code, 
@@ -117,7 +123,7 @@ FROM
     temp_2019 t,
     total_sum ts,
     (SELECT @cumulative_sum := 0) AS init  -- Initialize the variable
-ORDER BY total_delivery DESC
+ORDER BY total_delivery DESC;
 
 
 
@@ -149,7 +155,7 @@ FROM
     temp_2020 t,
     total_sum ts,
     (SELECT @cumulative_sum := 0) AS init  -- Initialize the variable
-ORDER BY total_delivery DESC
+ORDER BY total_delivery DESC;
 
 SELECT 
 	2020 AS year,
@@ -165,7 +171,7 @@ SELECT
     SUM(CASE WHEN abc_group = 'B' THEN 1 ELSE 0 END) AS B,
     SUM(CASE WHEN abc_group = 'C' THEN 1 ELSE 0 END) AS C, 
 	COUNT(abc_group) AS total 
-FROM sales_2019_abc
+FROM sales_2019_abc;
 
 
 #4) Analyze customer revenue growth in 2020.
@@ -175,7 +181,7 @@ SELECT s20.client_id,
     (SUM(s20.delivery_amount) - SUM(s19.delivery_amount)) / SUM(s19.delivery_amount) * 100 AS revenue_grwoth
 FROM sales_2020_non_nulls s20, sales_2019_non_nulls s19
 GROUP BY client_id
-ORDER BY revenue_grwoth DESC
+ORDER BY revenue_grwoth DESC;
 
 
 #5) Conduct an RFM analysis: RFM analysis is an analysis method that allows you to segment customers by the frequency and amount of purchases and identify those customers who bring more money.
@@ -183,13 +189,22 @@ ORDER BY revenue_grwoth DESC
 • Frequency — frequency (how often they buy from you);
 • Monetary - money (the total amount of purchases).
 
+#RFM 2020
 CREATE TEMPORARY TABLE rfm_2020 AS
-SELECT order_number, client_id, date_of_delivery, sum(delivery_amount) As total_purchase
-FROM sales_2020_non_nulls 
-GROUP BY order_number, client_id, date_of_delivery
-ORDER BY client_id, date_of_delivery
+	SELECT order_number, client_id, date_of_delivery, sum(delivery_amount) As total_purchase
+	FROM sales_2020_non_nulls 
+	GROUP BY order_number, client_id, date_of_delivery
+	ORDER BY client_id, date_of_delivery;
 
-#FRM
+#rfm 2019
+CREATE TABLE rfm_2019 AS
+	SELECT order_number, client_id, date_of_delivery, sum(delivery_amount) As total_purchase
+	FROM sales_2019_non_nulls 
+	GROUP BY order_number, client_id, date_of_delivery
+	ORDER BY client_id, date_of_delivery;
+
+SET @today = '2021-01-01';
+SET @last_year_today = '2020-01-01';
 WITH rfm_2020_temp AS (
 	SELECT
 		client_id,
@@ -198,16 +213,35 @@ WITH rfm_2020_temp AS (
 		DATEDIFF(date_of_delivery, LAG(date_of_delivery) OVER(PARTITION BY client_id ORDER BY date_of_delivery)) AS date_diff,
 		total_purchase
 	FROM rfm_2020
+), rfm_2020 AS(
+	SELECT client_id,	
+		DATEDIFF(@today, MAX(date_of_delivery))AS recency_days,
+		COUNT(client_id) AS frequency,
+		SUM(total_purchase) AS monetary
+	FROM rfm_2020_temp
+	GROUP BY client_id
+), rfm_2019_temp AS (
+	SELECT
+		client_id,
+		date_of_delivery, 
+		LAG(date_of_delivery) OVER(PARTITION BY client_id ORDER BY date_of_delivery) as last_purchase,
+		DATEDIFF(date_of_delivery, LAG(date_of_delivery) OVER(PARTITION BY client_id ORDER BY date_of_delivery)) AS date_diff,
+		total_purchase
+	FROM rfm_2019
+), rfm_2019 AS(
+	SELECT client_id,	
+		DATEDIFF(@last_year_today, MAX(date_of_delivery))AS recency_days,
+		COUNT(client_id) AS frequency,
+		SUM(total_purchase) AS monetary
+	FROM rfm_2019_temp
+	GROUP BY client_id
 )
-#assume today is 2021/1/1
-SET @today = '2021-01-01';
-SELECT client_id,	
-	DATEDIFF(@today, MAX(date_of_delivery))AS recency,
-    COUNT(client_id) AS frequency,
-    SUM(total_purchase) AS monetary
-FROM rfm_2020_temp
-GROUP BY client_id
-	
+SELECT 2019 AS YEAR, AVG(recency_days), AVG(frequency), AVG(monetary) FROM rfm_2019
+UNION
+SELECT 2020 AS YEAR, AVG(recency_days), AVG(frequency), AVG(monetary) FROM rfm_2020
+
+
+    
 #6) Check the seller's income by month. Is there seasonality?
 WITH monthly_sales_2019 AS(
 	SELECT 
@@ -221,6 +255,7 @@ WITH monthly_sales_2019 AS(
 		SUM(delivery_amount) as monthly_revenue
 	FROM sales_2020_non_nulls
 	GROUP BY monthly
+    ORDER BY monthly
 )
 SELECT s20.monthly,
 	s19.monthly_revenue_19, 
@@ -228,19 +263,20 @@ SELECT s20.monthly,
 FROM monthly_sales_2019 s19
 RIGHT JOIN monthly_sales_2020 s20
 ON s19.monthly = s20.monthly 
-ORDER BY monthly 
+ORDER BY monthly ;
 -- 2019 great perfromance in FEB, JUNE - SEP are is consider as off season, OCT to the first quarter of the coming year show continuous sales increase 
 -- 2020 better performance in first half year, decline significantly after june, SEP and after are consider as off season
 
 
 
 #7) Conduct an analysis of what influenced the increase in the income of the seller.
+#monthly performance 
 SELECT DATE_FORMAT(date_of_delivery, '%Y-%m') AS month,
 	COUNT(DISTINCT order_number) AS number_of_order, 
     SUM(delivery_amount) as monthly_revenue,
     ROUND(SUM(delivery_amount) / COUNT(DISTINCT order_number), 2) AS avg_order_size
 from sales_2020_non_nulls
-GROUP BY month
+GROUP BY month;
 
 # overall product performance 
 WITH product_overall_performance_2020 AS(
@@ -264,5 +300,9 @@ SELECT s20.product_code,
     s20.total_amount AS s20_total_amount
 FROM product_overall_performance_2020 s20
 LEFT JOIN product_overall_performance_2019 s19
-ON s20.product_code = s19.product_code
+ON s20.product_code = s19.product_code;
 -- the main reason of sales increase in 2020 is due to the introduction of new products that outperformed traditional products, increasing the comapany offerings variety to improve company's profitability
+
+
+
+  
