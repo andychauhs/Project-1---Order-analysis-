@@ -16,22 +16,13 @@ ALTER TABLE sales_2019
 CHANGE `Order number` order_number DOUBLE,
 CHANGE `CLient ID` client_id DOUBLE,
 CHANGE `Product code` product_code DOUBLE,
-CHANGE `Date of delivery` date_of_delivery DATE;
-
-UPDATE sales_2019
-SET ` Delivery amount` = REPLACE(REPLACE(` Delivery amount`, ',', ''), '.', '')
-WHERE ` Delivery amount` IS NOT NULL;
-ALTER TABLE sales_2019
+CHANGE `Date of delivery` date_of_delivery DATE
 CHANGE ` Delivery amount` delivery_amount BIGINT;
 
 SELECT * FROM sales_2019;
 
 
 #2020 table 
-UPDATE sales_2020
-SET ` Delivery amount` = REPLACE(REPLACE(` Delivery amount`, ',', ''), '.', '')
-WHERE ` Delivery amount` IS NOT NULL;
-
 ALTER TABLE sales_2020
 CHANGE `Order number` order_number DOUBLE,
 CHANGE `CLient ID` client_id DOUBLE,
