@@ -61,7 +61,27 @@ The dataset for this analysis is sourced from Kaggle: Business Analysis (junior)
 You can replicate the analysis by executing the provided SQL queries against the included datasets or your own datasets with similar structures.
 
 ## Conclusion
-This project aims to provide in-depth insights into sales performance over the years 2019 and 2020. By analyzing new product revenue, customer behavior, and seasonal trends, the findings will assist in making informed decisions for future growth.
+In conclusion, the analysis showed company performance improvement in 2020 and reminded the company should be aware of the seasonalty problem in the business.
+
+The new products introduced in 2020 has significantly dominate(90% of total revenue) the whole year revenue. 
+There are some product introduced in 2019 still showing significant improvement in 2020, indicating that products have the growing potential. Company should clearly identify the main reason of old products with significant increase in 2020 for further actions, whether it is due to sales clearance with luractive discount or products are in introduction or growth stage in the product lifecycle. 
+
+Beisdes, according to ABC analysis, there is a phenomanon that numbers of product in category A (top 80% os sales) is increasing, meaning that more products are becoming profitable and important to company revenues. The average sales of product increased from around 14,860,070 to 17,015,441, showing new products introduction decision is appropriate, resulting in profitability of new products outperformance the traditional ones. The new products not only drive company revenues but also diversify the risks creating synergy for the company.  
+
+Furthermore, RFM analysis reveals the average purchase interval is shorterned among cutomers, while average frequency is tripled and average purchase size is doubled. These are the signal of effecitve sales and marketing strategies that ehanced customer engagement, customer experience and unleashed cross_selling and upselling opportunities. With the incerase in purchase frequenct and size, the company may need to adjust its investory management and supply chain operation to meet the rising demands. 
+
+However, under seasonality analysis, company unable to maintain a relatively consistant sales performance across the year. In 2019, there was sudden rise in February achieved over 667million sales, however the months after cannot maintain the perfomrance and dropped significantly in March to 77million and continue dropping with the lowever reach of 5.3 million in September. October has an obvious recover to nearly 35 million sales. The trend keep rising untill June in the next year, reaching over 413 millions sales but still far away from the peak. There is clearer pattern in 2020, where the company better perfomed in the first half years. The common situation between 2 years is that after the company reached the highest sales in the year, the next month would be a dramatic drop in sales.  Further analysis is needed to understand the driver of flutation sales and the key of high sales achievement. Even the new products introduced in 2020 already diversifying risks, driving relative stable environment, company should consider other strategies to stablise the fluctuation and seasonality problem, to achieve a more secure sales performance. The fluctuation will complexify the inventory management with higher costs. 
+
+Suggestions: 
+1. **Conduct In-Depth Seasonal Analysis**: Initiate a comprehensive analysis to identify the underlying factors driving sales fluctuations. This should include examining customer behavior patterns, promotional impacts, and external factors (e.g., market trends, economic conditions). Understanding these drivers can help the company better prepare and strategize for seasonal peaks and troughs.
+
+2. **Diversify Product Launch Timing**: Consider introducing new products throughout the year. This can help sustain interest and sales momentum, providing more consistent revenue streams and reducing dependence on seasonal spikes.
+
+3. **Strengthen Marketing Strategies**: Enhance marketing campaigns during low sales periods to stimulate demand. This could involve targeted promotions, special discounts, or bundled product offerings that encourage customer purchases during off seasons.
+
+4. **Explore Subscription Models**: Consider introducing subscription services for certain products, which can provide predictable and recurring revenue. This strategy can help stabilize cash flows and reduce the impact of seasonality on revenue.
+
+
 
 For any questions or further information, feel free to reach out.
 
