@@ -85,7 +85,7 @@ Suggestions:
 
 For any questions or further information, feel free to reach out.
 
-**Author**: HO SIng Andy CHAU
+**Author**: Ho Sing Andy CHAU
 **Email**: hosingchau@outlook.com
 **Date**: 1 JAN 2025
 
